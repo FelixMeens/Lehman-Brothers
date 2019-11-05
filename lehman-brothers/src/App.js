@@ -1,14 +1,25 @@
 import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import SignIn from "./SignIn";
+
+import SignIn from "./pages/SignIn";
+import Dashboard from "./pages/Dashboard";
+
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
   return (
     <React.Fragment>
-      <CssBaseline />
-
-      <SignIn></SignIn>
+      <Router>
+        <CssBaseline />
+        <Switch>
+          <Route exact path="/">
+            <SignIn />
+          </Route>
+          <Route path="/dashboard">
+            <Dashboard />
+          </Route>
+        </Switch>
+      </Router>
     </React.Fragment>
   );
 }
