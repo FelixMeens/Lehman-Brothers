@@ -1,15 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Button from '@material-ui/core/Button';
+import React from "react";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import SignIn from "./SignIn";
 
 function App() {
   return (
-    <div className="App">
-      <Button variant="contained" color="primary">
-      Hello World
-    </Button>
-    </div>
+    <React.Fragment>
+      <CssBaseline />
+
+      <SignIn></SignIn>
+    </React.Fragment>
   );
 }
 
