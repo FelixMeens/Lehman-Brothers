@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -18,10 +20,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
-  appBar: {
-    paddingLeft: 24,
-    paddingTop: 16,
-    paddingBottom: 16
+  title: {
+    flexGrow: 1
   },
   card: {
     maxWidth: 345,
@@ -37,7 +37,8 @@ const useStyles = makeStyles(theme => ({
   },
   tableContainer: {
     padding: 16,
-    marginTop: 24
+    marginTop: 24,
+    marginBottom: 24
   }
 }));
 
@@ -971,7 +972,12 @@ export default function Dashboard() {
   return (
     <React.Fragment>
       <AppBar className={classes.appBar} position="relative">
-        <Typography variant="">DASHBOARD</Typography>
+        <Toolbar>
+          <Typography variant="h5" className={classes.title}>
+            Dashboard
+          </Typography>
+          <Button color="inherit">Logout</Button>
+        </Toolbar>
       </AppBar>
       <Container maxWidth="md" className={classes.container}>
         <Grid container spacing={3}>
