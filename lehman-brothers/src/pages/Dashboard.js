@@ -19,29 +19,6 @@ import TableRow from "@material-ui/core/TableRow";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
-  title: {
-    flexGrow: 1
-  },
-  card: {
-    maxWidth: 345,
-    minWidth: 300,
-    marginTop: 24
-  },
-  container: {},
-  accountHeader: {
-    padding: 16
-  },
-  number: {
-    paddingTop: 16
-  },
-  tableContainer: {
-    padding: 16,
-    marginTop: 24,
-    marginBottom: 24
-  }
-}));
-
 const accountData = {
   accounts: [
     {
@@ -878,113 +855,160 @@ const transactionData = {
   }
 };
 
-export default function Dashboard() {
-  const [open, opening] = useState(false);
-
-  const classes = useStyles();
-
-  const AccountCard = accountData.accounts.map(card => (
-    <Grid item spacing={3}>
-      <Card className={classes.card}>
-        <CardActionArea onClick={() => opening(true)}>
-          <Box className={classes.accountHeader}>
-            <Typography variant="h5" component="h2">
-              {card.account_name}
-            </Typography>
-            <Typography variant="subtitle" color="textSecondary">
-              {card.account_numbers[0].value}
-            </Typography>
-          </Box>
-          <Divider></Divider>
-          <CardContent>
-            <Typography
-              align="right"
-              variant="h3"
-              color={card.available_balance > 0 ? "primary" : "secondary"}
-              component="p"
-              className={classes.number}
-            >
-              {card.available_balance}
-            </Typography>
-            <Typography
-              align="right"
-              color={card.available_balance > 0 ? "primary" : "secondary"}
-              variant="body2"
-              component="p"
-            >
-              Available balance
-            </Typography>
-            <Typography
-              align="right"
-              variant="h4"
-              color="textSecondary"
-              component="p"
-              className={classes.number}
-            >
-              {card.booked_balance}
-            </Typography>
-            <Typography
-              align="right"
-              color="textSecondary"
-              variant="body2"
-              component="p"
-            >
-              Booked balance
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Grid>
-  ));
-
-  const transactionRow = transactionData.response.transactions.map(row => (
-    <TableRow key={row.id}>
-      <TableCell>{row.booking_date}</TableCell>
-      <TableCell>{row.type_description}</TableCell>
-      <TableCell>{row.counterparty_name}</TableCell>
-      <TableCell>{row.message}</TableCell>
-      <TableCell align="right">{row.amount}</TableCell>
-    </TableRow>
-  ));
-
-  function Transactions() {
-    return (
-      <Paper className={classes.tableContainer}>
-        <Typography variant="h5" component="h2">
-          Transactions
-        </Typography>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Type description</TableCell>
-              <TableCell>Counterparty name</TableCell>
-              <TableCell>Message</TableCell>
-              <TableCell align="right">Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{transactionRow}</TableBody>
-        </Table>
-      </Paper>
-    );
+export default class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      data: []
+    };
   }
 
-  return (
-    <React.Fragment>
-      <AppBar className={classes.appBar} position="relative">
-        <Toolbar>
-          <Typography variant="h5" className={classes.title}>
-            Dashboard
+  componentDidMount() {
+    fetch("127.0.0.0")
+      .then(res => res.json())
+      .then(
+        result => {
+          this.setState({
+            data: result
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  render() {
+    const classes = makeStyles(theme => ({
+      title: {
+        flexGrow: 1
+      },
+      card: {
+        maxWidth: 345,
+        minWidth: 300,
+        marginTop: 24
+      },
+      container: {},
+      accountHeader: {
+        padding: 16
+      },
+      number: {
+        paddingTop: 16
+      },
+      tableContainer: {
+        padding: 16,
+        marginTop: 24,
+        marginBottom: 24
+      }
+    }));
+
+    const AccountCard = accountData.response.accounts.map(card => (
+      <Grid item spacing={3}>
+        <Card className={classes.card}>
+          <CardActionArea onClick={() => this.setState({ open: true })}>
+            <Box className={classes.accountHeader}>
+              <Typography variant="h5" component="h2">
+                {card.account_name}
+              </Typography>
+              <Typography variant="subtitle" color="textSecondary">
+                {card.account_numbers[0].value}
+              </Typography>
+            </Box>
+            <Divider></Divider>
+            <CardContent>
+              <Typography
+                align="right"
+                variant="h3"
+                color={card.available_balance > 0 ? "primary" : "secondary"}
+                component="p"
+                className={classes.number}
+              >
+                {card.available_balance}
+              </Typography>
+              <Typography
+                align="right"
+                color={card.available_balance > 0 ? "primary" : "secondary"}
+                variant="body2"
+                component="p"
+              >
+                Available balance
+              </Typography>
+              <Typography
+                align="right"
+                variant="h4"
+                color="textSecondary"
+                component="p"
+                className={classes.number}
+              >
+                {card.booked_balance}
+              </Typography>
+              <Typography
+                align="right"
+                color="textSecondary"
+                variant="body2"
+                component="p"
+              >
+                Booked balance
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </Grid>
+    ));
+
+    const transactionRow = transactionData.response.transactions.map(row => (
+      <TableRow key={row.id}>
+        <TableCell>{row.booking_date}</TableCell>
+        <TableCell>{row.type_description}</TableCell>
+        <TableCell>{row.counterparty_name}</TableCell>
+        <TableCell>{row.message}</TableCell>
+        <TableCell align="right">{row.amount}</TableCell>
+      </TableRow>
+    ));
+
+    function Transactions() {
+      return (
+        <Paper className={classes.tableContainer}>
+          <Typography variant="h5" component="h2">
+            Transactions
           </Typography>
-          <Button color="inherit">Logout</Button>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="md" className={classes.container}>
-        <Grid container spacing={3}>
-          {AccountCard}
-        </Grid>
-        {open && <Transactions></Transactions>}
-      </Container>
-    </React.Fragment>
-  );
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell>Type description</TableCell>
+                <TableCell>Counterparty name</TableCell>
+                <TableCell>Message</TableCell>
+                <TableCell align="right">Amount</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{transactionRow}</TableBody>
+          </Table>
+        </Paper>
+      );
+    }
+
+    return (
+      <React.Fragment>
+        <AppBar className={classes.appBar} position="relative">
+          <Toolbar>
+            <Typography variant="h5" className={classes.title}>
+              Dashboard
+            </Typography>
+            <Button color="inherit">Logout</Button>
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth="md" className={classes.container}>
+          <Grid container spacing={3}>
+            {AccountCard}
+          </Grid>
+          {this.state.open && <Transactions></Transactions>}
+        </Container>
+      </React.Fragment>
+    );
+  }
 }
