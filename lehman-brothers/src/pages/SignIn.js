@@ -55,7 +55,7 @@ function SignIn() {
             <AccountBalanceIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in to Nordea bank statements
+            Sign in to Nordea open banking
           </Typography>
           <form className={classes.form} noValidate>
             <TextField
